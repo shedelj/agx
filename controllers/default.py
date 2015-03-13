@@ -11,14 +11,25 @@
 
 def index():
     """
-    example action using the internationalization operator T and flash
-    rendered by views/default/index.html or views/generic.html
-
-    if you need a simple wiki simply replace the two lines below with:
-    return auth.wiki()
+        This is the main dev chart display.
     """
-    response.flash = T("Welcome to web2py!")
-    return dict(message=T('Hello World'))
+    q = (db.dev)
+
+    form = SQLFORM.grid(q,
+        fields=[db.dev.film,
+                db.dev.developer,
+                db.dev.dilution,
+                db.dev.iso,
+                db.dev.time_35,
+                db.dev.time_120,
+                db.dev.temperature,
+                ],
+        orderby = [db.dev.film],
+        editable=False, deletable=False,
+        paginate = 15,
+        csv = False,
+        )
+    return dict(form=form)
 
 
 def user():

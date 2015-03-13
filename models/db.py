@@ -44,6 +44,22 @@ response.generic_patterns = ['*'] if request.is_local else []
 from gluon.tools import Auth, Service, PluginManager
 
 auth = Auth(db)
+db.define_table(
+    auth.settings.table_user_name,
+    Field('first_name', length=128, default=''),
+    Field('last_name', length=128, default=''),
+    Field('email', length=128, default='', unique=True), # required
+    Field('password', 'password', length=512,            # required
+          readable=False, label='Password'),
+    Field('registration_key', length=512,                # required
+          writable=False, readable=False, default=''),
+    Field('reset_password_key', length=512,              # required
+          writable=False, readable=False, default=''),
+    Field('registration_id', length=512,                 # required
+          writable=False, readable=False, default=''),
+    Field('created', 'list:reference dev'),
+    )
+
 service = Service()
 plugins = PluginManager()
 
