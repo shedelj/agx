@@ -57,7 +57,7 @@ db.define_table(
           writable=False, readable=False, default=''),
     Field('registration_id', length=512,                 # required
           writable=False, readable=False, default=''),
-    Field('created', 'list:reference dev'),
+    Field('favorites', 'list:reference dev'),
     )
 
 service = Service()

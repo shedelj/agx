@@ -9,13 +9,32 @@
 ## - api is an example of Hypermedia API support and access control
 #########################################################################
 
+
+@auth.requires_login()
+def fav():
+    r = db(db.dev.id == request.args(0)).select().first()
+    fav = db(db.auth_user.id == auth.user_id).select().first().favorites
+    if r not in fav:
+        fav.append(r)
+    db(db.auth_user.id == auth.user_id).update(favorites=fav)
+    redirect(URL('default', 'index'))
+    return
+
 def index():
     """
         This is the main dev chart display.
     """
     q = (db.dev)
 
+    def generate_fav_button(row):
+        b = ''
+        b = A('Favorite', _class='btn', _href=URL('default', 'fav', args=[row.id]))
+        return b
+
+    links = [dict(header='', body=generate_fav_button)]
+
     form = SQLFORM.grid(q,
+        links = links,
         fields=[db.dev.film,
                 db.dev.developer,
                 db.dev.dilution,
