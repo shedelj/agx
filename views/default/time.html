@@ -1,0 +1,91 @@
+{{include 'web2py_ajax.html'}}
+{{
+	response.files.insert(0,URL('static','js/jquery.js'))
+	response.files.insert(1,URL('static','js/jquery-ui.js'))
+	response.files.insert(2,URL('static','css/jquery-ui.css'))
+	response.files.insert(3,URL('static','css/jquery-ui.structure.css'))
+	response.files.insert(4,URL('static','css/jquery-ui.theme.css'))
+	response.files.insert(5,URL('static','js/jquery.plugin.js'))
+	response.files.insert(6,URL('static','js/jquery.plugin.min.js'))
+	response.files.insert(7,URL('static','js/jquery.countdown.js'))
+	response.files.insert(8,URL('static','js/jquery.countdown.min.js'))
+	response.files.insert(9,URL('static','css/jquery.countdown.css'))
+	response.include_meta()
+	response.include_files()
+}}
+{{extend 'layout.html'}}
+
+<head>
+	<style>
+	#timer-wrapper {
+		-webkit-box-shadow: -2px 2px 6px -1px rgba(0,0,0,0.75);
+		-moz-box-shadow: -2px 2px 6px -1px rgba(0,0,0,0.75);
+		box-shadow: -2px 2px 6px -1px rgba(0,0,0,0.75);
+		text-align: center;
+		margin-left: 30%;
+		margin-right: 30%;
+	}
+
+	</style>
+</head>
+
+<script>
+	/* Code borrowed from http://stackoverflow.com/questions/20618355/the-simplest-possible-javascript-countdown-timer */
+
+	function startTimer(duration,display) {
+		var timer = duration, minutes, seconds;
+		setInterval(function() {
+			minutes = parseInt(timer / 60, 10);
+			seconds = parseInt(timer % 60, 10);
+
+			minutes = minutes < 10 ? "0" + minutes : minutes;
+			seconds = seconds < 10 ? "0" + seconds : seconds;
+
+			display.text(minutes + ":" + seconds);
+
+			if (--timer < 0) {
+				timer = duration;
+			}
+		}, 1000);
+	}
+
+	jQuery(function() {
+		var minutesFromNow = 0;
+		var steps = ["Development", "Stop Bath", "Fixing", "Final Wash"];
+		var times = [60, 30, 420, 600];
+		var step = 0;
+
+		function nextStep() {
+			alert('Step Complete!');
+			step = step+1;
+			$('#step').text(steps[step]);
+		}
+
+		$('#timer').countdown({
+			until: minutesFromNow,
+			format: 'MS',
+			onExpiry: nextStep
+			});
+		$('#startTimer').click(function() {
+			minutesFromNow = times[step];
+			$('#timer').countdown('option', {until: minutesFromNow})
+		});
+		$('#toggleButton').click(function() { 
+		    $('#timer').countdown('toggle'); 
+		}); 
+		$('#step').text(steps[step]);
+
+	});
+</script>
+
+{{=form}}
+<div id="timer-wrapper"> 
+	<br>
+	<h4 id="step"> </h4>
+	<br>
+	<span id="timer"></span>
+	<button id="startTimer">Start</button>
+	<button id="toggleButton">Pause</button>
+	<br>
+	<br> 
+</div>

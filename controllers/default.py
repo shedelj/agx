@@ -20,6 +20,13 @@ def fav():
     redirect(URL('default', 'index'))
     return
 
+def time():
+    r = db(db.dev.id == request.args(0)).select().first()
+    form = SQLFORM(db.dev, record=r, readonly=True)
+    time35 = r.time_35
+    time120 = r.time_120
+    return dict(form=form, time35=time35, time120=time120)
+
 def index():
     """
         This is the main dev chart display.
@@ -31,7 +38,13 @@ def index():
         b = A('Favorite', _class='btn', _href=URL('default', 'fav', args=[row.id]))
         return b
 
-    links = [dict(header='', body=generate_fav_button)]
+    def generate_time_button(row):
+        b = ''
+        b = A('Time', _class='btn', _href=URL('default', 'time', args=[row.id]))
+        return b
+
+    links = [dict(header='', body=generate_fav_button),
+             dict(header='', body=generate_time_button),]
 
     form = SQLFORM.grid(q,
         links = links,
@@ -44,7 +57,7 @@ def index():
                 db.dev.temperature,
                 ],
         orderby = [db.dev.film],
-        editable=False, deletable=False,
+        editable=False, deletable=False, details=False,
         paginate = 15,
         csv = False,
         )
