@@ -25,29 +25,14 @@
 		margin-left: 30%;
 		margin-right: 30%;
 	}
-
+	form {
+		float: left;
+		margin: 0 20px 20px;
+	}
 	</style>
 </head>
 
 <script>
-	/* Code borrowed from http://stackoverflow.com/questions/20618355/the-simplest-possible-javascript-countdown-timer */
-
-	function startTimer(duration,display) {
-		var timer = duration, minutes, seconds;
-		setInterval(function() {
-			minutes = parseInt(timer / 60, 10);
-			seconds = parseInt(timer % 60, 10);
-
-			minutes = minutes < 10 ? "0" + minutes : minutes;
-			seconds = seconds < 10 ? "0" + seconds : seconds;
-
-			display.text(minutes + ":" + seconds);
-
-			if (--timer < 0) {
-				timer = duration;
-			}
-		}, 1000);
-	}
 
 	jQuery(function() {
 		var minutesFromNow = 0;
@@ -61,10 +46,15 @@
 			$('#step').text(steps[step]);
 		}
 
+		function agitate() {
+		}
+
 		$('#timer').countdown({
 			until: minutesFromNow,
 			format: 'MS',
-			onExpiry: nextStep
+			onExpiry: nextStep,
+			onTick: agitate,
+			tickInterval: 60,
 			});
 		$('#startTimer').click(function() {
 			minutesFromNow = times[step];

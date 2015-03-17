@@ -40,7 +40,7 @@ def index():
 
     def generate_time_button(row):
         b = ''
-        b = A('Time', _class='btn', _href=URL('default', 'time', args=[row.id]))
+        b = A('Time', _class='btn', _align="center", _href=URL('default', 'time', args=[row.id]))
         return b
 
     links = [dict(header='', body=generate_fav_button),
