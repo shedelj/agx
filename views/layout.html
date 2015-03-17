@@ -74,6 +74,13 @@
       padding:10px 5px 10px 5px;
       text-align: center;
     }
+    .nav {
+      position: relative;
+      bottom: 20px;
+    }
+    label[for=dev_iso] {
+      text-transform: uppercase;
+    }
   </style>
 </head>
 
@@ -90,8 +97,8 @@
                 <h1>
                     <a href="/agx/default/index">{{=response.title}}</a>
                     <small>{{=response.subtitle or ''}}</small>
-                    <small><ul id="navbar" class="nav pull-right">{{='auth' in globals() and auth.navbar(mode="dropdown") or ''}}</ul></small>
                 </h1>
+                <ul id="navbar" class="nav pull-right">{{='auth' in globals() and auth.navbar(mode="dropdown") or ''}}</ul>
             </div>
         </div>
 	{{pass}}

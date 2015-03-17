@@ -79,6 +79,11 @@ def user():
         @auth.requires_permission('read','table name',record_id)
     to decorate functions that need access control
     """
+    if 'register' or 'profile' in request.args:
+        fields_to_hide = ['favorites']
+        for fieldname in fields_to_hide:
+            field = db.auth_user[fieldname]
+            field.readable = field.writable = False
     return dict(form=auth())
 
 

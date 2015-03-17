@@ -22,12 +22,39 @@
 		-moz-box-shadow: -2px 2px 6px -1px rgba(0,0,0,0.75);
 		box-shadow: -2px 2px 6px -1px rgba(0,0,0,0.75);
 		text-align: center;
-		margin-left: 30%;
-		margin-right: 30%;
+		margin-left: 50%;
+		/* margin-left: 30%; */
+		/* margin-right: 30%; */
 	}
 	form {
 		float: left;
 		margin: 0 20px 20px;
+	}
+	td > label {
+		font-weight: bold;
+		font-size: 16px;
+	}
+	td.w2p_fw {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+	.countdown {
+		padding: 5px;
+		float: left;
+		width: 240px;
+		height: 40px;
+	}
+	#tbox {
+		margin: 20 auto;
+		width: 242px;
+		height: 42px;
+	}
+	#progressbar {
+		margin: 30px;
+	}
+	.ui-progressbar-value {
+		border: #088AE7;
+		background: #1E78D0 url("images/ui-bg_gloss-wave_35_f6a828_500x100.png") 50% 50% repeat-x;
 	}
 	</style>
 </head>
@@ -40,21 +67,29 @@
 		var times = [60, 30, 420, 600];
 		var step = 0;
 
+		$("#progressbar").progressbar({
+			value: 0,
+			max: times[step],
+		});
+
 		function nextStep() {
 			alert('Step Complete!');
 			step = step+1;
 			$('#step').text(steps[step]);
+			$('#progressbar').progressbar("option","max",times[step]);
 		}
 
-		function agitate() {
+		function updateBar(periods) {
+			var v = times[step] - $.countdown.periodsToSeconds(periods);
+			$('#progressbar').progressbar("value",v);
 		}
 
 		$('#timer').countdown({
 			until: minutesFromNow,
 			format: 'MS',
 			onExpiry: nextStep,
-			onTick: agitate,
-			tickInterval: 60,
+			onTick: updateBar,
+			tickInterval: 1,
 			});
 		$('#startTimer').click(function() {
 			minutesFromNow = times[step];
@@ -63,6 +98,7 @@
 		$('#toggleButton').click(function() { 
 		    $('#timer').countdown('toggle'); 
 		}); 
+
 		$('#step').text(steps[step]);
 
 	});
@@ -72,8 +108,10 @@
 <div id="timer-wrapper"> 
 	<br>
 	<h4 id="step"> </h4>
-	<br>
-	<span id="timer"></span>
+	<div id="tbox">
+		<span id="timer" class="countdown"></span>
+	</div>
+	<div id="progressbar"></div>
 	<button id="startTimer">Start</button>
 	<button id="toggleButton">Pause</button>
 	<br>
