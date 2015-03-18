@@ -31,6 +31,7 @@ def fav():
     redirect(URL('default', 'index'))
     return
 
+@auth.requires_login()
 def rm_fav():
     r = db(db.dev.id == request.args(0)).select().first()
     fav = db(db.auth_user.id == auth.user_id).select().first().favorites
@@ -40,6 +41,7 @@ def rm_fav():
     redirect(URL('default', 'index'))
     return
 
+@auth.requires_login()
 def toggle_fav():
     r = db(db.dev.id == request.args(0)).select().first()
     fav = db(db.auth_user.id == auth.user_id).select().first().favorites
@@ -49,14 +51,51 @@ def toggle_fav():
         redirect(URL('default','fav', args=[request.args(0)]))
     return
 
+@auth.requires_login()
+def edit():
+    r = db(db.dev.id == request.args(0)).select().first()
+    if r.author_id != auth.user_id:
+        session.flash = T('Not authorized.')
+        redirect(URL('default', 'index'))
+    form = SQLFORM(db.dev, record=r)
+    if form.process().accepted:
+        session.flash = T('Updated')
+        redirect(URL('default', 'time', args=[r.id]))
+    return dict(form=form)
+
+@auth.requires_login()
+def delete():
+    r = db(db.dev.id == request.args(0)).select().first()
+    if r.author_id != auth.user_id:
+        session.flash = T('Not authorized.')
+        redirect(URL('default', 'index'))
+    form = SQLFORM(db.dev, record=r)
+    db(db.dev.id == r.id).delete()
+    redirect(URL('default', 'index'))
 
 def time():
     r = db(db.dev.id == request.args(0)).select().first()
     form = SQLFORM(db.dev, record=r, readonly=True)
     time35 = r.time_35
     time120 = r.time_120
-
-    return dict(form=form, time35=time35, time120=time120)
+    if auth.user_id != None:
+        eb=''
+        rb=''
+        if r.author_id == auth.user_id:
+            rb = A('Delete', _class='btn', _href=URL('default', 'delete', args=r.id))
+            eb = A('Edit', _class='btn', _href=URL('default', 'edit', args=r.id))
+        fav = db(db.auth_user.id == auth.user_id).select().first().favorites
+        if r in fav:
+            fb=''
+            fb= A('Unfavorite', _class='btn', _href=URL('default', 'toggle_fav', args=r.id))
+        else:
+            fb=''
+            fb= A('Favorite', _class='btn', _href=URL('default', 'toggle_fav', args=r.id))
+    else:
+        fb=''
+        rb=''
+        eb=''
+    return dict(form=form, time35=time35, time120=time120, favbutton=fb, editbutton=eb, deletebutton=rb)
 
 def index():
     """
@@ -64,18 +103,23 @@ def index():
     """
     q = (db.dev)
 
+    """   
     def generate_fav_button(row):
         b = ''
         b = A('Favorite', _class='btn', _href=URL('default', 'toggle_fav', args=[row.id]))
         return b
+    """
 
     def generate_time_button(row):
         b = ''
-        b = A('Time', _class='btn', _align="center", _href=URL('default', 'time', args=[row.id]))
+        b = A('View Time', _class='btn', _align="center", _href=URL('default', 'time', args=[row.id]))
         return b
 
+    """
     links = [dict(header='', body=generate_fav_button),
              dict(header='', body=generate_time_button),]
+    """
+    links = [dict(header='', body=generate_time_button),]
 
     form = SQLFORM.grid(q,
         links = links,

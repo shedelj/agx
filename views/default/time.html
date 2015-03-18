@@ -38,6 +38,7 @@
 		padding-left: 10px;
 		padding-right: 10px;
 		font-style: oblique;
+		width: 250px;
 	}
 	.countdown {
 		padding: 5px;
@@ -56,6 +57,9 @@
 	.ui-progressbar-value {
 		border: #088AE7;
 		background: #1E78D0 url("images/ui-bg_gloss-wave_35_f6a828_500x100.png") 50% 50% repeat-x;
+	}
+	#buttons {
+		margin-bottom: 30;
 	}
 	</style>
 </head>
@@ -105,6 +109,12 @@
 	});
 </script>
 
+<div id="buttons">
+	{{=favbutton}}
+	{{=editbutton}}
+	{{=deletebutton}}
+</div>
+
 {{=form}}
 <div id="timer-wrapper"> 
 	<br>
@@ -113,9 +123,10 @@
 		<span id="timer" class="countdown"></span>
 	</div>
 	<div id="progressbar"></div>
-	<button id="startTimer">Start</button>
+	<button id="startTimer">Begin</button>
 	<button id="toggleButton">Pause</button>
 	<br>
 	<br> 
 </div>
+<br>
 
