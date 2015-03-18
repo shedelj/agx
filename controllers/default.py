@@ -9,6 +9,17 @@
 ## - api is an example of Hypermedia API support and access control
 #########################################################################
 
+@auth.requires_login()
+def view_fav():
+    fav = db(db.auth_user.id == auth.user_id).select().first().favorites
+    film = {}
+    developer = {}
+    iso = {}
+    for f in fav:
+        film[f] = db(db.dev.id == f).select().first().film
+        developer[f] = db(db.dev.id == f).select().first().developer
+        iso[f] = db(db.dev.id == f).select().first().iso
+    return dict(fav=fav, film=film, developer=developer, iso=iso)
 
 @auth.requires_login()
 def fav():
@@ -20,11 +31,31 @@ def fav():
     redirect(URL('default', 'index'))
     return
 
+def rm_fav():
+    r = db(db.dev.id == request.args(0)).select().first()
+    fav = db(db.auth_user.id == auth.user_id).select().first().favorites
+    if r in fav:
+        fav.remove(r)
+    db(db.auth_user.id == auth.user_id).update(favorites=fav)
+    redirect(URL('default', 'index'))
+    return
+
+def toggle_fav():
+    r = db(db.dev.id == request.args(0)).select().first()
+    fav = db(db.auth_user.id == auth.user_id).select().first().favorites
+    if r in fav:
+        redirect(URL('default','rm_fav', args=[request.args(0)]))
+    else:
+        redirect(URL('default','fav', args=[request.args(0)]))
+    return
+
+
 def time():
     r = db(db.dev.id == request.args(0)).select().first()
     form = SQLFORM(db.dev, record=r, readonly=True)
     time35 = r.time_35
     time120 = r.time_120
+
     return dict(form=form, time35=time35, time120=time120)
 
 def index():
@@ -35,7 +66,7 @@ def index():
 
     def generate_fav_button(row):
         b = ''
-        b = A('Favorite', _class='btn', _href=URL('default', 'fav', args=[row.id]))
+        b = A('Favorite', _class='btn', _href=URL('default', 'toggle_fav', args=[row.id]))
         return b
 
     def generate_time_button(row):

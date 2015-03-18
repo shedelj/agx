@@ -16,7 +16,6 @@ db.define_table('dev',
 	Field('temperature'),
 	Field('date_posted', 'datetime'),
 	Field('notes', 'text'),
-	Field('author'),
 	Field('author_id', db.auth_user),
 	)
 
@@ -25,5 +24,3 @@ db.dev.author_id.default = auth.user_id
 db.dev.author_id.writable = db.dev.author_id.readable = False
 db.dev.date_posted.default = datetime.utcnow()
 db.dev.date_posted.writable = False
-db.dev.author.default = get_name()
-db.dev.author.writeable = False 

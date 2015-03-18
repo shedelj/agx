@@ -37,6 +37,7 @@
 	td.w2p_fw {
 		padding-left: 10px;
 		padding-right: 10px;
+		font-style: oblique;
 	}
 	.countdown {
 		padding: 5px;
@@ -64,7 +65,7 @@
 	jQuery(function() {
 		var minutesFromNow = 0;
 		var steps = ["Development", "Stop Bath", "Fixing", "Final Wash"];
-		var times = [60, 30, 420, 600];
+		var times = [{{=time35}} * 60, 30, 420, 600];
 		var step = 0;
 
 		$("#progressbar").progressbar({
@@ -117,3 +118,4 @@
 	<br>
 	<br> 
 </div>
+

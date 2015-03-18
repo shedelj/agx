@@ -81,6 +81,13 @@
     label[for=dev_iso] {
       text-transform: uppercase;
     }
+    #favs {
+      margin-right: 20px;
+    }
+    #main_link {
+      text-decoration: none;
+      color: #FF3333;
+    }
   </style>
 </head>
 
@@ -95,10 +102,12 @@
         <div class="span12">
             <div class="page-header">
                 <h1>
-                    <a href="/agx/default/index">{{=response.title}}</a>
+                    <a id="main_link" href="/agx/default/index">AgX</a>
                     <small>{{=response.subtitle or ''}}</small>
                 </h1>
                 <ul id="navbar" class="nav pull-right">{{='auth' in globals() and auth.navbar(mode="dropdown") or ''}}</ul>
+                <a id="favs" class="nav pull-right" href="/agx/default/view_fav">Favorites</a>
+
             </div>
         </div>
 	{{pass}}

@@ -1,0 +1,5 @@
+{{include 'web2py_ajax.html'}}
+{{extend 'layout.html'}}
+{{for f in fav:}}
+<li><a href="/agx/default/time/{{=f}}">{{=f}}: {{=film[f]}}  @ {{=iso[f]}}, {{=developer[f]}} </a></li>
+{{pass}}
